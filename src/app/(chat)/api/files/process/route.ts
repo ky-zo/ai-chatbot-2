@@ -38,7 +38,7 @@ const FileSchema = z.object({
 //     .join('\n\n')
 // }
 
-async function extractMarkdownFromDOCX(buffer: Buffer): Promise<string> {
+async function extractMarkdownFromDOCX(arrayBuffer: ArrayBuffer): Promise<string> {
   // Convert to HTML first, with custom options to preserve structure
 
   const options = {
@@ -50,22 +50,41 @@ async function extractMarkdownFromDOCX(buffer: Buffer): Promise<string> {
     ],
   }
 
-  const result = await mammoth.convertToHtml(
-    {
-      buffer,
-    },
-    options
-  )
+  try {
+    // Pass the array buffer directly to mammoth
+    const result = await mammoth.convertToHtml({
+      arrayBuffer: arrayBuffer,
+    })
+
+    console.log('🟣 |  result:', result)
+
+    // Get the raw text content
+    // const text = result.value
+
+    // // Convert to markdown using ProseMirror
+    // // First create paragraphs by splitting on double newlines
+    // const formattedText = text
+    //   .split(/\n\s*\n/)
+    //   .map((para) => para.trim())
+    //   .filter((para) => para.length > 0)
+    //   .join('\n\n')
+
+    // Parse and serialize to markdown
+    return defaultMarkdownSerializer.serialize(defaultMarkdownParser.parse(formattedText))
+  } catch (error) {
+    console.error('DOCX processing error:', error)
+    throw new Error('Failed to process DOCX file: ' + (error as Error).message)
+  }
 
   // Convert HTML to ProseMirror doc and then to markdown
-  const div = document.createElement('div')
-  div.innerHTML = result.value
+  //  const div = document.createElement('div')
+  //div.innerHTML = result.value
 
   // Use your existing schema
   // const serializer = new MarkdownSerializer(documentSchema.nodes, documentSchema.marks)
   // const parser = new MarkdownParser(documentSchema, {}, {})
 
-  return defaultMarkdownSerializer.serialize(defaultMarkdownParser.parse(div.textContent || ''))
+  //return defaultMarkdownSerializer.serialize(defaultMarkdownParser.parse(div.textContent || ''))
 }
 
 export async function POST(request: Request) {
@@ -108,11 +127,14 @@ export async function POST(request: Request) {
           break
         case 'application/msword':
         case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-          content = await extractMarkdownFromDOCX(buffer)
+          content = await extractMarkdownFromDOCX(fileBuffer)
           break
         default:
           return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 })
       }
+
+      console.log('🟣 |  content:', content)
+      console.log('🟣 |  filename:', filename)
 
       return NextResponse.json({
         content,

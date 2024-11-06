@@ -21,7 +21,6 @@ type EditorProps = {
 }
 
 function PureEditor({ content, saveContent, suggestions, status }: EditorProps) {
-  console.log('🟣 | content:', content)
   const containerRef = useRef<HTMLDivElement>(null)
   const editorRef = useRef<EditorView | null>(null)
 
