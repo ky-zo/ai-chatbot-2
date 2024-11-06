@@ -14,7 +14,9 @@ export default defineConfig({
   migrations: {
     prefix: 'supabase',
   },
+  // Enable detailed logging during schema/migration operations
   verbose: true,
+  // Enforce strict type checking and validation of schema definitions
   strict: true,
   schemaFilter: ['public'],
 }) satisfies Config

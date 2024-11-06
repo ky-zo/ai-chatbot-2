@@ -21,6 +21,7 @@ type EditorProps = {
 }
 
 function PureEditor({ content, saveContent, suggestions, status }: EditorProps) {
+  console.log('🟣 | content:', content)
   const containerRef = useRef<HTMLDivElement>(null)
   const editorRef = useRef<EditorView | null>(null)
 
@@ -103,7 +104,7 @@ function PureEditor({ content, saveContent, suggestions, status }: EditorProps) 
 
   return (
     <div
-      className="prose relative dark:prose-invert"
+      className="dev-green prose relative"
       ref={containerRef}
     />
   )

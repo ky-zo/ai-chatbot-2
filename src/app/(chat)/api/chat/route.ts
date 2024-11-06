@@ -160,6 +160,7 @@ export async function POST(request: Request) {
             content: document.title,
           })
 
+          console.log('Running the stream with prediction')
           const { fullStream } = await streamText({
             model: customModel(model.apiIdentifier),
             system: 'You are a helpful writing assistant. Based on the description, please update the piece of writing.',
@@ -170,6 +171,14 @@ export async function POST(request: Request) {
               },
               { role: 'user', content: currentContent },
             ],
+            experimental_providerMetadata: {
+              openai: {
+                prediction: {
+                  type: 'content',
+                  content: currentContent,
+                },
+              },
+            },
           })
 
           for await (const delta of fullStream) {
