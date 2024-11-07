@@ -14,6 +14,7 @@ import { Vote } from '@/db/schema'
 import { fetcher } from '@/lib/utils'
 
 import { Canvas, UICanvas } from './canvas'
+import { CanvasEditor } from './canvas-editor'
 import { CanvasStreamHandler } from './canvas-stream-handler'
 import { MultimodalInput } from './multimodal-input'
 import { Overview } from './overview'
@@ -74,7 +75,7 @@ export function CanvasChat({
   return (
     <>
       {canvas && canvas.isVisible && (
-        <Canvas
+        <CanvasEditor
           chatId={documentId}
           input={input}
           setInput={setInput}
