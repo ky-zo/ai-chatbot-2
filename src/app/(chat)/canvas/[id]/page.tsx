@@ -12,7 +12,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const chat = await getChatById({ id })
   const document = await getDocumentById({ id })
 
-  if (!chat || !document) {
+  if (!document) {
     notFound()
   }
 
@@ -22,7 +22,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     return notFound()
   }
 
-  if (user.id !== chat.userId) {
+  if (user.id !== document.userId) {
     return notFound()
   }
 
@@ -36,7 +36,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   return (
     <CanvasChat
-      documentId={chat.id}
+      documentId={id}
       title={document.title || 'Untitled'}
       content={document.content || ''}
       initialMessages={convertToUIMessages(messagesFromDb)}

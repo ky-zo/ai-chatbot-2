@@ -444,7 +444,7 @@ export function Canvas({
         </div>
 
         <div className="prose h-full !max-w-full items-center overflow-y-scroll bg-background px-4 py-8 pb-40 dark:prose-invert dark:bg-muted md:p-20">
-          <div className="mx-auto flex max-w-[600px] flex-row">
+          <div className="dev-red mx-auto flex max-w-[600px] flex-row justify-center">
             {isDocumentsFetching && !canvas.content ? (
               <DocumentSkeleton />
             ) : mode === 'edit' ? (
