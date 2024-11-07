@@ -175,3 +175,23 @@ export async function getSuggestionsByDocumentId({ documentId }: { documentId: s
     throw error
   }
 }
+
+export const getUserDocuments = async () => {
+  const user = await getUser()
+
+  if (!user) {
+    return []
+  }
+
+  try {
+    // Get the latest version of each document using a subquery
+    return await db
+      .selectDistinctOn([document.id])
+      .from(document)
+      .where(and(eq(document.userId, user.id)))
+      .orderBy(document.id, desc(document.createdAt))
+  } catch (error) {
+    console.error('Failed to get documents from database')
+    throw error
+  }
+}

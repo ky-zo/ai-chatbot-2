@@ -1,4 +1,5 @@
 import { convertToCoreMessages, Message, StreamData, streamObject, streamText } from 'ai'
+import { v4 as uuidv4 } from 'uuid'
 import { z } from 'zod'
 
 import { customModel } from '@/ai'
@@ -6,9 +7,9 @@ import { models } from '@/ai/models'
 import { canvasPrompt, regularPrompt } from '@/ai/prompts'
 import { deleteChatById, getChatById, getDocumentById, getUser, saveChat, saveDocument, saveMessages, saveSuggestions } from '@/db/queries'
 import { Suggestion } from '@/db/schema'
-import { generateUUID, getMostRecentUserMessage, sanitizeResponseMessages } from '@/lib/utils'
+import { getMostRecentUserMessage, sanitizeResponseMessages } from '@/lib/utils'
 
-import { generateTitleFromUserMessage } from '../../actions'
+import { generateTitleFromUserMessage } from '../../(chat)/actions'
 
 export const maxDuration = 60
 
@@ -48,7 +49,7 @@ export async function POST(request: Request) {
   }
 
   await saveMessages({
-    messages: [{ ...userMessage, id: generateUUID(), createdAt: new Date(), chatId: id }],
+    messages: [{ ...userMessage, id: uuidv4(), createdAt: new Date(), chatId: id }],
   })
 
   const streamingData = new StreamData()
@@ -81,7 +82,7 @@ export async function POST(request: Request) {
           title: z.string(),
         }),
         execute: async ({ title }) => {
-          const id = generateUUID()
+          const id = uuidv4()
           let draftText: string = ''
 
           streamingData.append({
@@ -247,7 +248,7 @@ export async function POST(request: Request) {
               originalText: element.originalSentence,
               suggestedText: element.suggestedSentence,
               description: element.description,
-              id: generateUUID(),
+              id: uuidv4(),
               documentId: documentId,
               isResolved: false,
             }
@@ -288,7 +289,7 @@ export async function POST(request: Request) {
 
           await saveMessages({
             messages: responseMessagesWithoutIncompleteToolCalls.map((message) => {
-              const messageId = generateUUID()
+              const messageId = uuidv4()
 
               if (message.role === 'assistant') {
                 streamingData.appendMessageAnnotation({
