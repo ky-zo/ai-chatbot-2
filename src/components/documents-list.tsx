@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { getUserDocuments } from '@/db/queries'
 
 import { Button } from './ui/button'
@@ -26,12 +28,14 @@ export const DocumentsList = async () => {
             className="rounded-lg border p-4 hover:bg-muted/50">
             <h3 className="mb-2 font-medium">{doc.title}</h3>
             <p className="text-sm text-muted-foreground">{new Date(doc.createdAt).toLocaleDateString()}</p>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="mt-2">
-              View Document
-            </Button>
+            <Link href={`/canvas/${doc.id}`}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-2">
+                View Document
+              </Button>
+            </Link>
           </div>
         ))}
       </div>

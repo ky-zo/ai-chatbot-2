@@ -63,7 +63,7 @@ export function Chat({ id, initialMessages, selectedModelId }: { id: string; ini
 
   return (
     <>
-      <div className="dev-red flex h-dvh min-w-0 flex-col bg-background">
+      <div className="flex h-dvh min-w-0 flex-col bg-background">
         <ChatHeader selectedModelId={selectedModelId} />
         <div
           ref={messagesContainerRef}
