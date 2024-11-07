@@ -187,6 +187,7 @@ export async function POST(request: Request) {
 
             if (type === 'text-delta') {
               const { textDelta } = delta
+              console.log('🟣 | file: route.ts:190 | forawait | textDelta:', textDelta)
 
               draftText += textDelta
               streamingData.append({
